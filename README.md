@@ -135,6 +135,14 @@ note-experimentタスクを実行して
 
 失敗や不明点も正直に記録します。うまくいった話だけの実験ログは、実験ログではありません。
 
+## 既存のバーチャルカンパニー運用との関係
+
+mugen-loopは、作者がすでに運用している[AIエージェントによるバーチャルカンパニー群](https://garyohosu.github.io/portfolio/)（Auto AI Blog、AITecBlog、AI-Broker、AozoraDailyTranslations、WorldClassicsJP、Writer など）を安全に運用するための共通テンプレートにもなり得ます。
+
+個別のAIプロジェクトに `CONTRACT` / `schedule` / `rubrics` / `state` / `receipts` を持たせることで、ブラックボックス化しがちな無人運用を「説明可能」にし、安全に制御するための「運用OS」として機能させることを目指しています。
+
+将来的には、既存の監視プロジェクトである `CompanyGuardian` などとも連携し、異常検知時にmugen-loop側の契約（CONTRACT）に沿って安全に停止させるような仕組みも視野に入れています。
+
 ## 今後の拡張案
 
 - Claude Codeのスケジュール実行やcron、GitHub Actionsから schedule.yml を読んで定期起動する
