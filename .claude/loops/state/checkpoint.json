@@ -1,0 +1,13 @@
+{
+  "project": "mugen-loop",
+  "version": "0.1.0",
+  "status": "initialized",
+  "mode": "dry-run",
+  "lastRun": null,
+  "lastTask": null,
+  "currentPhase": "Phase 1: Report Loop",
+  "notes": [
+    "Initial goal: observe and report only.",
+    "No push, no merge, no destructive changes."
+  ]
+}

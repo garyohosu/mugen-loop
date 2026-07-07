@@ -1,0 +1,14 @@
+{
+  "$comment": "mugen-loop 安全設定。ここを緩めるのは人間だけ。緩めるときは一つずつ、receiptsのログを確認してから。",
+  "project": "mugen-loop",
+  "mode": "dry-run",
+  "dryRun": true,
+  "allowPush": false,
+  "allowMerge": false,
+  "allowDelete": false,
+  "allowDependencyUpdate": false,
+  "maxChangedFiles": 0,
+  "maxRuntimeMinutes": 15,
+  "requireHumanApproval": true,
+  "receiptRequired": true
+}

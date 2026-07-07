@@ -1,0 +1,80 @@
+# dream.md
+
+## 2026-07-07 17:00 Dreamingタイム
+
+### 今回やったこと
+- 指示内容を firststep.md として保存
+- mugen-loop テンプレート一式を新規作成(README / CLAUDE.md / CONTRACT.md / contract.local.example.md / .gitignore / .claude/loops/ 配下の settings・schedule・rubrics×3・tasks×3・state・receipts / scripts×2)
+- run-daily-check.sh と write-receipt.sh を実行して動作確認
+- 初回レシートを receipts/2026-07-07/ に記録し、checkpoint.json を更新
+
+### 気づいたこと
+- 「AIに枠を与える」設計は、契約(CONTRACT)・設定(settings.json)・記録(receipts)の3点が揃うと初めて機能する
+- Windows環境でもGit Bash経由でシェルスクリプトが問題なく動いた
+
+### 改善点
+- pr-hunter はまだ設計メモ段階。GitHub接続の認証方針(読み取り専用トークン)を先に決める必要がある
+- write-receipt.sh のテンプレートに rubrics の判定結果欄を足すと運用しやすそう
+
+### 次に試すとよさそうなこと
+- 初回コミット(人間の承認後)
+- Claude Codeに「daily-checkタスクを実行して」と頼み、報告→レシートの一連の流れを試す
+- receipts が数日たまったら、報告の精度を振り返って第2段階(提案)へ進むか判断する
+
+## 2026-07-07 17:06 Dreamingタイム
+
+### 今回やったこと
+- テーマ「私は何もしない。ループが働く。」でmugen-loopを再構築
+- CONTRACT.md冒頭に宣言文を追加、settings.json/checkpoint.jsonを新仕様に更新
+- docs/note-draft.md(note記事下書き)とtasks/note-experiment.mdを新規作成
+- rubrics 3種を新観点(実験の正直さ、既存設計との整合など)で更新
+- レシートを残し、スクリプト動作を再確認
+
+### 気づいたこと
+- 「何をしなかったか」をレシートに残す設計は、承認待ちの状態を可視化するのに効く
+- 旧構成のblog-review.mdは「承認なし削除禁止」ルールにより自分では消せない。ルールが自分自身にも作用した好例
+
+### 改善点
+- write-receipt.shのテンプレート見出しを「何をしたか/なぜしたか/何をしなかったか」に合わせると記入が楽になる
+
+### 次に試すとよさそうなこと
+- blog-review.mdの扱い(削除 or 併存)を人間が決める
+- 初回コミット(承認後)とGitHub公開、note記事のURL差し込み
+- daily-check→note-experimentを1日通しで回し、レシートから記事に追記する流れを検証する
+
+## 2026-07-07 17:10 Dreamingタイム
+
+### 今回やったこと
+- 追加修正の依頼を受け、docs/note-draft.md と tasks/note-experiment.md の存在を確認(両方とも前回作成済みだった)
+- blog-review.md(既存記事の校正用)と note-experiment.md(mugen-loop実験の記事化用)の役割分担を両ファイルに明記
+- note-experiment.md の読み込み素材に dream.md / firststep.md / README.md を追加
+- CLAUDE.md に「note記事化の素材として receipts / dream.md / docs/note-draft.md を意識する」を追記
+- README.md のタスク一覧に blog-review を追加
+
+### 気づいたこと
+- 「作成一覧に見当たらない」という指摘は、報告の書き方の問題だった。ファイルは存在していたが、報告で新規2件が目立たなかった可能性がある。レシートに存在確認の結果を明記する習慣が大事
+- 似たタスクが2つあるときは、削除ではなく役割の線引きで解決できる
+
+### 改善点
+- 実装報告では「新規/更新/据え置き」を最初に分けて見せると、こうした行き違いを減らせる
+
+### 次に試すとよさそうなこと
+- 初回コミット(人間の承認後)
+- note-experimentタスクを実際に1回回して、dream.mdとreceiptsからnote-draft.mdへの追記案を作る流れを検証する
+
+## 2026-07-07 17:15 Dreamingタイム
+
+### 今回やったこと
+- 人間側の次アクションを todo.md に整理(すぐやる/近いうち/pr-hunter接続前/note公開前/いつか、の5段階)
+- 人間の明示的な承認を得て、初回コミットとGitHub(garyohosu/mugen-loop)へのプッシュを実行
+
+### 気づいたこと
+- 「承認があったときだけpush」という契約の初回実運用になった。承認→実行→レシートの流れが一周した
+- todo.md は人間用だが、AIが読めば「今どのフェーズか」の判断材料にもなる
+
+### 改善点
+- todo.md の完了チェックを daily-check の確認項目に含めると、見回りの価値が上がりそう
+
+### 次に試すとよさそうなこと
+- GitHubで公開されたリポジトリを note-draft.md に貼る
+- 明日の朝、daily-check を一度回してレシートの精度を見る

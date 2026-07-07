@@ -1,0 +1,21 @@
+# 個人用の上書き設定(秘密情報は書かない前提だがgit管理もしない)
+contract.local.md
+
+# 環境変数・秘密情報
+.env
+
+# ログ
+*.log
+
+# 依存関係・キャッシュ
+node_modules/
+__pycache__/
+
+# OS固有
+.DS_Store
+
+# 一時ファイル
+tmp/
+
+# ローカル専用の状態ファイル
+.claude/loops/state/*.local.json

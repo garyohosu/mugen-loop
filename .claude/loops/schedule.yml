@@ -1,0 +1,35 @@
+# schedule.yml — 自動実行の設計メモ
+#
+# 注意: このファイルは自動実行の仕組みそのものではありません。
+# Claude Codeやcron、GitHub Actionsに接続する前の設計ファイルです。
+# 「いつ・何を・どのモードで動かすか」を先に文書として固定しておき、
+# 実際のスケジューラ登録は人間が承認してから行います。
+# 現段階ではすべて dry-run(確認・提案・記録のみ)前提です。
+
+timezone: Asia/Tokyo
+defaults:
+  dryRun: true
+  requireHumanApproval: true
+  receiptRequired: true
+
+tasks:
+  - name: daily-check
+    file: .claude/loops/tasks/daily-check.md
+    when: "毎朝 9:00"
+    cron: "0 9 * * *"   # 参考表記。実際の登録は人間が行う
+    mode: dry-run
+    note: プロジェクト状態の見回りと報告。変更はしない
+
+  - name: pr-hunter
+    file: .claude/loops/tasks/pr-hunter.md
+    when: "平日朝 9:30"
+    cron: "30 9 * * 1-5"
+    mode: dry-run
+    note: PRやIssueを確認する想定。GitHub接続はまだ行わない(タスク内TODO参照)
+
+  - name: note-experiment
+    file: .claude/loops/tasks/note-experiment.md
+    when: "毎晩 21:00"
+    cron: "0 21 * * *"
+    mode: dry-run
+    note: note記事化のための実験ログ整理。docs/note-draft.md への追記案を作る。公開はしない
