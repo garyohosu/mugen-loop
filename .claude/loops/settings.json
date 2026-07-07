@@ -2,6 +2,7 @@
   "$comment": "mugen-loop 安全設定。ここを緩めるのは人間だけ。緩めるときは一つずつ、receiptsのログを確認してから。",
   "project": "mugen-loop",
   "mode": "dry-run",
+  "currentPhase": "Phase 1.5: Multi-Agent Review Loop",
   "dryRun": true,
   "allowPush": false,
   "allowMerge": false,
@@ -10,5 +11,21 @@
   "maxChangedFiles": 0,
   "maxRuntimeMinutes": 15,
   "requireHumanApproval": true,
-  "receiptRequired": true
+  "receiptRequired": true,
+  "multiAgent": true,
+  "mainAgent": "claude-code",
+  "subAgents": ["codex-exec", "antigravity", "claude-self-review"],
+  "codexExec": {
+    "enabled": false,
+    "defaultMode": "read-only-review",
+    "useOnlyForCriticalReview": true,
+    "requiresExplicitRunFlag": true,
+    "runFlag": "RUN_CODEX=1",
+    "onLimitReached": "record-and-fallback",
+    "maxRunsPerDay": 1,
+    "allowFileChanges": false,
+    "allowPush": false,
+    "allowMerge": false,
+    "allowPullRequestCreation": false
+  }
 }
