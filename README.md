@@ -64,7 +64,14 @@ AIは起動するたびに同じ契約を読み、同じ基準で自己点検し
 - `.claude/loops/rubrics/` — 評価基準。AIが自分の成果を自己点検するための物差しです(code / writing / safety)
 - `.claude/loops/state/checkpoint.json` — 状態保存。前回どこまでやったか、次に何を引き継ぐかを記録します
 - `.claude/loops/receipts/` — 監査ログ。実行のたびに「何をしたか、なぜしたか、何をしなかったか」のレシートを残します
-- `.claude/loops/tasks/` — タスク定義。daily-check(見回り)、pr-hunter(PR/Issue確認の設計)、note-experiment(mugen-loop実験のnote記事化)、blog-review(既存ブログ記事の校正・確認)
+- `.claude/loops/tasks/` — タスク定義。daily-check(見回り)、pr-hunter(PR/Issue確認の設計)、note-experiment(mugen-loop実験のnote記事化)、blog-review(文章レビュー)
+
+記事関連の2タスクは役割が違います。
+
+- blog-review は「文章そのもの」を見る係。既存の記事下書きやREADME、docs/note-draft.md の本文について、タイトル、H1、読みやすさ、誤字脱字、参考リンク、公開前TODOを確認します
+- note-experiment は「実験ログ」を見る係。receipts、dream.md、firststep.md、checkpoint.json を読んで、mugen-loop実験そのものをnote記事に育てます
+
+たとえるなら、blog-review は記事を読む係、note-experiment は実験を記事に育てる係です。
 - `.claude/loops/settings.json` — 安全設定。dry-run、push禁止などの初期値です
 - `docs/note-draft.md` — note記事「私は何もしないループエンジニアになりたい」の下書きです
 - `scripts/` — 見回りとレシート作成のための安全なスクリプトです

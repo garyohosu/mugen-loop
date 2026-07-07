@@ -78,6 +78,9 @@ AIへの毎回のチャット指示を、契約(CONTRACT)・スケジュール(s
 - README.md を常に最新に保つこと。構成やルールが変わったら更新を提案する
 - docs/note-draft.md はこのプロジェクトの成果物の一つ。実験で得た発見を反映する対象として常に意識する
 - note記事化の素材として receipts / dream.md / docs/note-draft.md を更新対象として意識すること
+- 記事関連タスクは blog-review と note-experiment を使い分けること
+  - 文章そのもののレビュー(下書き・README・note-draft.mdの本文確認)は tasks/blog-review.md
+  - 実験ログから記事素材を育てる作業は tasks/note-experiment.md
 - 変更した場合は、理由をレシートに必ず書くこと
 
 ## コミットについて

@@ -32,4 +32,11 @@ tasks:
     when: "毎晩 21:00"
     cron: "0 21 * * *"
     mode: dry-run
-    note: note記事化のための実験ログ整理。docs/note-draft.md への追記案を作る。公開はしない
+    note: 実験ログを見る係。receipts等からnote記事の素材を整理し、docs/note-draft.md への追記案を作る。公開はしない
+
+  - name: blog-review
+    file: .claude/loops/tasks/blog-review.md
+    when: "必要時または公開前レビュー"
+    cron: null   # 定期実行しない。人間が必要なときに起動する
+    mode: dry-run
+    note: 文章そのものを見る係。記事下書き・README・note-draft.md の本文をレビューする。公開はしない

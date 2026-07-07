@@ -1,12 +1,17 @@
-# task: blog-review — ブログ記事レビュータスク
+# task: blog-review — 文章レビュータスク(記事を読む係)
 
-目的: 既存のブログ記事や下書き(draft)記事を校正・確認し、公開前に直すべき点を提案する。
+目的: 既存の記事下書き・README.md・docs/note-draft.md などの文章をレビューし、
+公開前に直すべき点を提案する。
 **このタスクは記事を公開しない。修正もしない。指摘と提案のみ。**
 
 ## note-experiment.md との役割分担
 
-- このタスク(blog-review)は「既存のブログ記事・draft記事の校正・確認」を担当する
-- mugen-loop実験そのものをnote記事にする作業は tasks/note-experiment.md が担当する
+- blog-review(このタスク)は「文章そのもの」を見る係
+  - 対象: 既存の記事下書き、README.md、docs/note-draft.md などの本文
+  - 観点: タイトル、H1、読みやすさ、誤字脱字、参考リンク、公開前TODO
+- note-experiment は「実験ログ」を見る係
+  - mugen-loop実験そのものをnote記事に育てる(tasks/note-experiment.md 参照)
+- 迷ったら: 文章の出来を確認したいなら blog-review、記事の素材を増やしたいなら note-experiment
 
 ## 実行前
 

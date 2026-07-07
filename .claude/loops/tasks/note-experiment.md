@@ -5,9 +5,11 @@
 
 ## blog-review.md との役割分担
 
-- このタスク(note-experiment)は「mugen-loop実験の記録」を記事化するためのもの
-- 既存のブログ記事やdraft記事の校正・確認は tasks/blog-review.md が担当する
-- 迷ったら: 対象がこのリポジトリの実験ログなら note-experiment、外部の記事原稿なら blog-review
+- note-experiment(このタスク)は「実験ログ」を見る係
+  - receipts、dream.md、firststep.md、checkpoint.json を読み、mugen-loop実験そのものをnote記事に育てる
+- blog-review は「文章そのもの」を見る係
+  - 既存の記事下書きやREADME.md、docs/note-draft.md の本文をレビューする(tasks/blog-review.md 参照)
+- 迷ったら: 記事の素材を増やしたいなら note-experiment、文章の出来を確認したいなら blog-review
 
 ## 実行前
 
@@ -20,7 +22,7 @@
    - 今日(または前回実行以降)のループ実験で何をしたかを、
      receipts/ と state/checkpoint.json から確認する
 2. 素材から発見を抜き出す
-   - receipts/、dream.md、firststep.md、README.md を読み、記事に使える発見を抜き出す
+   - receipts/、dream.md、firststep.md、state/checkpoint.json を読み、記事に使える発見を抜き出す
    - 例: うまく回った仕組み、止まった場面、人間とAIの役割分担の気づき
 3. 失敗、不明点、設計判断も正直に記録する
    - うまくいかなかったこと、まだ分からないこと、迷った末の設計判断を、隠さず素材として残す
