@@ -135,6 +135,27 @@ note-experimentタスクを実行して
 
 失敗や不明点も正直に記録します。うまくいった話だけの実験ログは、実験ログではありません。
 
+## Loop Status Report Generator
+
+mugen-loop自身の現在状態を、`docs/loop-status.md` に1枚のレポートとしてまとめる機能です。
+checkpoint、receipts、QandA、todo、各種ドキュメントの有無、安全設定を読み取り、整理して書き出すだけの、
+Phase 1(Report Loop)に収まる安全な実用機能です。自動修正・push・merge・PR作成は行いません。
+
+実行方法:
+
+```
+python scripts/generate-loop-status.py
+```
+
+Windows環境で `python` コマンドが起動しない場合は、以下を使います。
+
+```
+py scripts/generate-loop-status.py
+```
+
+実行すると `docs/loop-status.md` が上書き生成されます。手順の詳細は
+`.claude/loops/tasks/loop-status-report.md` を参照してください。
+
 ## 既存のバーチャルカンパニー運用との関係
 
 mugen-loopは、作者がすでに運用している[AIエージェントによるバーチャルカンパニー群](https://garyohosu.github.io/portfolio/)（Auto AI Blog、AITecBlog、AI-Broker、AozoraDailyTranslations、WorldClassicsJP、Writer など）を安全に運用するための共通テンプレートにもなり得ます。

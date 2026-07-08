@@ -44,6 +44,7 @@ AIは、契約を読み、予定に従い、評価基準で自分の成果を確
 - .claude/loops/receipts/ への新規レシートの書き込み
 - .claude/loops/state/checkpoint.json の更新
 - docs/note-draft.md への追記案の作成と反映(人間がレビューする前提)
+- loop-status-report タスクに限り、docs/loop-status.md の生成・更新(それ以外のファイルへの書き込みは許可しない)
 
 ## 禁止する作業
 

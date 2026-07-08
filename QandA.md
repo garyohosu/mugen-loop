@@ -215,3 +215,22 @@ AIがこのリポジトリで実行した作業単位ごとに `lastRun` / `last
 
 将来TODO:
 特になし(対応完了)。
+
+---
+
+### Q12. docs/loop-status.md の位置づけとCLAUDE.mdの書き込み許可範囲
+
+質問:
+`scripts/generate-loop-status.py` は `docs/loop-status.md` を毎回上書き生成する。CLAUDE.mdの「変更してよい範囲」は現在 `receipts/`、`checkpoint.json`、`docs/note-draft.md` を明記しており、`docs/loop-status.md` は含まれていない(今回は人間の明示指示による例外として作成した)。今後この機能を正式なタスク(loop-status-report)として繰り返し使う場合、CLAUDE.mdの許可範囲に `docs/loop-status.md` を追加すべきか。またこのファイルはgitで毎回コミットする実体として管理するのか、それとも生成のたびに内容が変わるスナップショットとして`.gitignore`対象にするのか。
+
+回答(2026-07-08、人間の承認により確定):
+`docs/loop-status.md` は正式なレポート出力先として扱う。git管理対象とし、`loop-status-report`タスクに限り更新してよい。ただしそれ以外の任意ファイルへの書き込みは許可しない。
+
+理由:
+状態レポートはCONTRACT.mdの目的(判断材料の整理と監査ログの記録)に沿う正式な成果物であり、毎回人間が明示指示する例外運用よりも、タスクを許可範囲として明文化する方が運用がぶれない。自動push・merge・PR作成・既存レシート改変の禁止は維持したまま、書き込み先を`docs/loop-status.md`一箇所に限定することで安全性を保つ。
+
+現時点の方針:
+CLAUDE.md「変更してよい範囲」とCONTRACT.md「許可する作業」に、`loop-status-report`タスク実行時に限り`docs/loop-status.md`を生成・更新してよい旨を追記した。`docs/loop-status.md`は`.gitignore`に加えず、通常どおりgit管理する。
+
+将来TODO:
+更新頻度が高くなりすぎた場合(毎回差分だけのコミットが積み重なる等)は、git管理から外すか、コミット対象を人間判断にすることを検討する。

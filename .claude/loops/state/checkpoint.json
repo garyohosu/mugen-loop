@@ -4,7 +4,7 @@
   "status": "ok",
   "mode": "dry-run",
   "lastRun": "2026-07-08",
-  "lastTask": "review-fixes",
+  "lastTask": "loop-status-report",
   "currentPhase": "Phase 1.5: Multi-Agent Review Loop",
   "notes": [
     "初期目標: 見回りと報告のみ。push・merge・破壊的変更はしない。",
@@ -13,6 +13,7 @@
     "既存バーチャルカンパニー運用文脈を追加し、コミット及びpush完了(2026-07-07)。",
     "Phase 1.5(マルチエージェント化)の構成(Claude Codeメイン・Codex/Antigravity連携)をsettings.json/CONTRACT.mdに反映済み。",
     "2026-07-08のレビューで、QandA.mdにレビュー時の追記条件、checkpoint更新対象、run-daily-check表示文言の不明点を追記した。",
-    "2026-07-08、人間の承認によりQ10(lastRun/lastTaskは全AI作業を記録)とQ11(表示文言の最小修正)を確定し、run-daily-check.shとnote-draft構成例を修正した。"
+    "2026-07-08、人間の承認によりQ10(lastRun/lastTaskは全AI作業を記録)とQ11(表示文言の最小修正)を確定し、run-daily-check.shとnote-draft構成例を修正した。",
+    "2026-07-08、最初の実用機能としてLoop Status Report Generator(scripts/generate-loop-status.py)を追加し、docs/loop-status.mdを生成した。Phase 1の範囲内(観察と報告のみ)。"
   ]
 }
