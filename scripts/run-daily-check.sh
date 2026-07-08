@@ -34,5 +34,5 @@ mkdir -p "$RECEIPTS_DIR"
 echo "OK: $RECEIPTS_DIR を用意しました"
 echo
 
-echo "=== daily-check 完了(変更は行っていません) ==="
+echo "=== daily-check 完了(破壊的操作・既存ファイル変更は行っていません) ==="
 echo "次の一歩: scripts/write-receipt.sh daily-check でレシートを残してください"

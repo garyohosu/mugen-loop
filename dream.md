@@ -184,3 +184,42 @@
 
 ### 次に試すとよさそうなこと
 - Phase 1.5 の残TODO(Codex呼び出し方法、Antigravity起動条件、新タスク定義)を人間と設計する
+
+## 2026-07-08 08:50 Dreamingタイム
+
+### 今回やったこと
+- リポジトリ全体をレビューし、README/CONTRACT/CLAUDE.md、`.claude/loops/`配下、スクリプト、note下書きを確認した
+- `bash -n` で2つのシェルスクリプトの構文を確認し、settings/checkpointのJSONを読み込めることを確認した
+- 不明点を QandA.md に Q9〜Q11 として追記した
+
+### 気づいたこと
+- `scripts/run-daily-check.sh` は receipts ディレクトリを作る可能性があるのに、最後の表示が「変更は行っていません」となっていて、監査ログ重視の思想と少しずれる
+- `checkpoint.json` の lastRun/lastTask が正式タスクだけを指すのか、単発作業やレビューも含むのかが明確ではない
+- `docs/note-draft.md` の構成例では tasks が daily-check/pr-hunter/note-experiment だけになっており、現行の blog-review 併存方針と少しずれている
+
+### 未解決
+- QandA.md をレビュー時の正式な質問記録先にするかどうか
+- checkpoint.json に `lastFormalTask` と `lastActivity` のような区別が必要かどうか
+- run-daily-check.sh の表示文言を修正するかどうか
+
+### 次に試すとよさそうなこと
+- 人間の承認があれば、run-daily-check.sh の最終表示を「破壊的操作・既存ファイル変更は行っていません」に修正する
+- note-draft の構成例に blog-review を追加する
+- レビュー系タスクの正式定義を作り、QandA.md への追記条件を明文化する
+
+## 2026-07-08 レビュー反映 Dreamingタイム
+
+### 今回やったこと
+- レビュー指摘3件を最小修正: Q10確定(checkpointは全AI作業を記録)、run-daily-check.shの完了表示を「破壊的操作・既存ファイル変更は行っていません」に修正(Q11)、note-draft構成例にblog-reviewを追加
+- レシート・checkpoint.json更新、構文/JSON検証まで実施。コミットは承認待ち
+
+### 気づいたこと
+- 「未確定」とマークしておいた項目が、人間の一言で確定に変わる流れが定着してきた。QandA.mdが承認の受け皿として機能している
+- 監査ログの文言は「何をしていないか」まで正確に書く必要がある。mkdir一つでも「変更なし」とは言えない
+
+### 改善点
+- レビュー指摘に「修正済み/未対応」の状態を持たせると、対応漏れの機械的な検出ができそう
+
+### 次に試すとよさそうなこと
+- 今回の修正のコミット(承認後)
+- Phase 1.5 残TODO(Codex呼び出し設計)の着手

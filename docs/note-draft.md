@@ -115,11 +115,16 @@ mugen-loop/
 │   ├── settings.json          … 安全設定(dry-run、push禁止など)
 │   ├── schedule.yml           … スケジュール設計メモ
 │   ├── rubrics/               … 評価基準(code / writing / safety)
-│   ├── tasks/                 … タスク定義(daily-check / pr-hunter / note-experiment)
+│   ├── tasks/                 … タスク定義(daily-check / pr-hunter / blog-review / note-experiment)
 │   ├── state/checkpoint.json  … 状態保存
 │   └── receipts/              … 監査ログ置き場
 └── scripts/                   … 見回りとレシート作成のスクリプト
 ```
+
+タスクは今のところ4つです。daily-check は状態確認と見回り。
+pr-hunter は PR / Issue / CI 確認の将来タスク(まだ設計メモ段階)。
+blog-review は記事本文やREADMEなど文章そのもののレビュー。
+note-experiment は実験ログをnote記事に育てるタスク(この記事もそれで育てています)。
 
 面白かったのは、CLAUDE.mdに安全ルールを書いておくと、
 Claude Code自身がそのルールを引用しながら「これは承認が必要なのでやりません」と
