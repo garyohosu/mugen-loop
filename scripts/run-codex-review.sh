@@ -342,12 +342,77 @@ build_review_prompt() {
   printf '出力は指定されたJSON Schemaに厳密に従ってください。\n'
 }
 
+is_windows_compat_shell() {
+  case "$(uname -s 2>/dev/null || true)" in
+    MINGW*|MSYS*|CYGWIN*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# where.exeの複数候補からWindows native launcherを選ぶ。
+# 同じ種別が複数ある場合はwhere.exeの出力順を維持する。
+select_windows_codex_path() {
+  local candidates=()
+  local line lower suffix candidate
+  while IFS= read -r line; do
+    line="${line%$'\r'}"
+    [ -n "$line" ] && candidates+=("$line")
+  done
+
+  for suffix in .cmd .bat .exe; do
+    for candidate in "${candidates[@]}"; do
+      lower="${candidate,,}"
+      if [[ "$lower" == *"$suffix" ]]; then
+        printf '%s\n' "$candidate"
+        return 0
+      fi
+    done
+  done
+
+  if [ "${#candidates[@]}" -gt 0 ]; then
+    printf '%s\n' "${candidates[0]}"
+    return 0
+  fi
+  return 1
+}
+
+normalize_executable_path() {
+  local candidate="$1"
+  if is_windows_compat_shell && [[ "$candidate" =~ ^[A-Za-z]:[\\/].* ]] && command -v cygpath >/dev/null 2>&1; then
+    cygpath -u "$candidate"
+  else
+    printf '%s\n' "$candidate"
+  fi
+}
+
+resolve_codex_path() {
+  local candidate=""
+
+  # 明示overrideは単一の実行ファイルパスだけを許可する。
+  # 引数を含むCODEX_COMMAND形式はshell再解釈を招くため採用しない。
+  if [ -n "${CODEX_PATH:-}" ]; then
+    candidate="$CODEX_PATH"
+  elif is_windows_compat_shell && command -v where.exe >/dev/null 2>&1; then
+    candidate="$(where.exe codex 2>/dev/null | select_windows_codex_path || true)"
+  fi
+
+  # Windows native候補がない場合だけ、現在のshellの解決結果へfallbackする。
+  if [ -z "$candidate" ]; then
+    candidate="$(command -v codex 2>/dev/null || true)"
+  fi
+  [ -n "$candidate" ] || return 1
+
+  candidate="$(normalize_executable_path "$candidate")"
+  [ -f "$candidate" ] || return 1
+  printf '%s\n' "$candidate"
+}
+
 build_codex_command() {
   local output_file="$1"
   local schema_abs codex_path
   schema_abs="$(realpath "$SCHEMA_FILE")"
-  codex_path="$(command -v codex 2>/dev/null || true)"
-  if [ -z "$codex_path" ] || [ ! -f "$codex_path" ]; then
+  codex_path="$(resolve_codex_path 2>/dev/null || true)"
+  if [ -z "$codex_path" ]; then
     echo "codex実行ファイルを解決できませんでした。" >&2
     return 1
   fi
