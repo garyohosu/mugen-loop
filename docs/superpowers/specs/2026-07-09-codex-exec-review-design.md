@@ -9,6 +9,18 @@ Claude Codeが内容を再確認し、採否を決定してから人間へ報告
 この文書は呼び出し方法、権限、タイムアウト、利用回数、出力形式、監査方法を確定する。
 CLI呼び出しコード、新規タスク定義、Antigravity fallbackは本設計の実装範囲に含めない。
 
+## 1.1 外部AIレビューのprovider方針
+
+- Claude Codeを主作業者・統括・最終確認役とする
+- Codex CLIを第一レビューアー(primary reviewer)とし、現在の実装・安定化を最優先する
+- 当面は既存の設定名`codexExec`を維持する
+- 将来providerを抽象化する場合も、default providerはCodex CLIとする
+- Grok / Antigravityは未実装・非デフォルトの将来候補または補助候補とする
+- 通常運用ではGrok / Antigravityを使用しない
+- Codex CLIでは不足する場合または比較検証が必要な場合に限り、人間の個別明示承認を得て
+  Grok / Antigravityの使用を検討する
+- Grok / Antigravityへの自動fallbackは実装しない
+
 ## 2. 前提
 
 - 実行環境はGitリポジトリのルートとする
@@ -157,7 +169,7 @@ Codexプロセスのハードタイムアウトは10分とする。
 CLIの構造化イベントや終了コードで確定できない場合は `cli_error` とし、
 推測で `limit_reached` に分類しない。
 
-Antigravityを起動する条件と方法は別設計で確定する。
+Grok / Antigravityを起動する条件と方法は、必要性が生じた時点で別設計・別承認により確定する。
 本設計では結果分類とレシート記録まで行い、自動fallbackは行わない。
 
 ## 8. Claude Codeによる再確認
