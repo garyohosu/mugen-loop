@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mugen-loop.local/schemas/codex-review-output.schema.json",
+  "title": "Codex Review Output",
+  "description": "docs/superpowers/specs/2026-07-09-codex-exec-review-design.md セクション5に基づくCodexレビュー結果の最終出力スキーマ。未知フィールドは拒否する。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reviewStatus", "summary", "scope", "findings", "unreviewed"],
+  "properties": {
+    "reviewStatus": {
+      "type": "string",
+      "enum": ["pass", "findings", "incomplete"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewType", "target"],
+      "properties": {
+        "reviewType": {
+          "type": "string",
+          "enum": ["code", "document"]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "severity",
+          "title",
+          "file",
+          "line",
+          "evidence",
+          "recommendation",
+          "confidence"
+        ],
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "line": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "特定できない場合に限り null を許可する"
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recommendation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          }
+        }
+      }
+    },
+    "unreviewed": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "reviewStatus=incomplete のとき1件以上必須"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reviewStatus": { "const": "incomplete" }
+        },
+        "required": ["reviewStatus"]
+      },
+      "then": {
+        "properties": {
+          "unreviewed": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}
