@@ -344,12 +344,17 @@ build_review_prompt() {
 
 build_codex_command() {
   local output_file="$1"
-  local schema_abs
+  local schema_abs codex_path
   schema_abs="$(realpath "$SCHEMA_FILE")"
+  codex_path="$(command -v codex 2>/dev/null || true)"
+  if [ -z "$codex_path" ] || [ ! -f "$codex_path" ]; then
+    echo "codex実行ファイルを解決できませんでした。" >&2
+    return 1
+  fi
 
   # 安全設定は必ずトップレベル、exec設定は必ずexec直後、review設定はreview後に固定する。
   CODEX_COMMAND=(
-    codex
+    "$codex_path"
     --strict-config
     -s read-only
     -a never
@@ -384,22 +389,87 @@ run_with_timeout() {
 
   node - "$timeout_seconds" "$prompt_file" "$stdout_file" "$stderr_file" "$@" <<'NODE'
 const fs = require("fs");
+const path = require("path");
 const { spawn } = require("child_process");
 
 const [, , timeoutRaw, promptFile, stdoutFile, stderrFile, ...command] = process.argv;
 const timeoutMs = Number(timeoutRaw) * 1000;
 if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || command.length === 0) process.exit(125);
 
+function readShebang(file) {
+  try {
+    const firstLine = fs.readFileSync(file, "utf8").split(/\r?\n/, 1)[0];
+    return firstLine.startsWith("#!") ? firstLine.toLowerCase() : "";
+  } catch {
+    return "";
+  }
+}
+
+function buildCmdInvocation(values) {
+  const env = { ...process.env };
+  const references = [];
+  values.forEach((value, index) => {
+  if (/[\0\r\n]/.test(value)) throw new Error("invalid cmd argument");
+    const name = `MUGEN_CODEX_ARG_${index}`;
+    // 値はcommand lineへ直接連結しない。cmdが固定の環境変数参照を1回だけ
+    // 展開するため、値中の%は再展開されない。quoteはcmd用に二重化する。
+    env[name] = value.replace(/"/g, "\"\"");
+    references.push(`"%${name}%"`);
+  });
+  return { commandLine: references.join(" "), env };
+}
+
+function resolveSpawnCommand(argv) {
+  const target = argv[0];
+  const args = argv.slice(1);
+  const extension = path.extname(target).toLowerCase();
+  const shebang = extension ? "" : readShebang(target);
+
+  if (extension === ".ps1" || /(?:powershell|pwsh)/.test(shebang)) {
+    return {
+      file: "powershell.exe",
+      args: ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", target, ...args],
+      kind: "powershell"
+    };
+  }
+  if (extension === ".cmd" || extension === ".bat") {
+    const invocation = buildCmdInvocation([target, ...args]);
+    return {
+      file: process.env.ComSpec || "cmd.exe",
+      args: ["/d", "/s", "/c", `"${invocation.commandLine}"`],
+      env: invocation.env,
+      kind: "cmd"
+    };
+  }
+  if (/^#!.*(?:\/|env\s+)(?:ba|da|k|z)?sh(?:\s|$)/.test(shebang)) {
+    return { file: "sh", args: [target, ...args], kind: "posix-shell" };
+  }
+  return { file: target, args, kind: "direct" };
+}
+
 const stdin = fs.openSync(promptFile, "r");
 const stdout = fs.openSync(stdoutFile, "w");
 const stderr = fs.openSync(stderrFile, "w");
-const child = spawn(command[0], command.slice(1), {
-  stdio: [stdin, stdout, stderr],
-  detached: process.platform !== "win32",
-  windowsHide: true
-});
+let child;
+try {
+  const resolved = resolveSpawnCommand(command);
+  child = spawn(resolved.file, resolved.args, {
+    stdio: [stdin, stdout, stderr],
+    detached: process.platform !== "win32",
+    windowsHide: true,
+    windowsVerbatimArguments: resolved.kind === "cmd",
+    env: resolved.env || process.env
+  });
+} catch {
+  for (const fd of [stdin, stdout, stderr]) {
+    try { fs.closeSync(fd); } catch {}
+  }
+  process.exit(127);
+}
 let timedOut = false;
 let settled = false;
+let childClosed = false;
+let treeKillFinished = false;
 
 function closeFiles() {
   for (const fd of [stdin, stdout, stderr]) {
@@ -407,24 +477,43 @@ function closeFiles() {
   }
 }
 
-function killTree() {
+function finishTimedOutRun() {
+  if (!timedOut || !childClosed || !treeKillFinished || settled) return;
+  settled = true;
+  closeFiles();
+  process.exit(124);
+}
+
+function killTree(done) {
   if (process.platform === "win32") {
-    spawn("taskkill", ["/PID", String(child.pid), "/T", "/F"], {
+    const killer = spawn("taskkill", ["/PID", String(child.pid), "/T", "/F"], {
       stdio: "ignore",
       windowsHide: true,
       detached: false
     });
-    setTimeout(() => {
+    let completed = false;
+    const complete = () => {
+      if (completed) return;
+      completed = true;
+      done();
+    };
+    killer.on("close", complete);
+    killer.on("error", () => {
       try { child.kill("SIGKILL"); } catch {}
-    }, 250).unref();
+      complete();
+    });
   } else {
     try { process.kill(-child.pid, "SIGKILL"); } catch {}
+    done();
   }
 }
 
 const timer = setTimeout(() => {
   timedOut = true;
-  killTree();
+  killTree(() => {
+    treeKillFinished = true;
+    finishTimedOutRun();
+  });
   setTimeout(() => {
     if (!settled) {
       try { child.kill("SIGKILL"); } catch {}
@@ -441,10 +530,14 @@ child.on("error", () => {
   process.exit(127);
 });
 child.on("close", (code, signal) => {
-  settled = true;
+  childClosed = true;
   clearTimeout(timer);
+  if (timedOut) {
+    finishTimedOutRun();
+    return;
+  }
+  settled = true;
   closeFiles();
-  if (timedOut) process.exit(124);
   if (Number.isInteger(code)) process.exit(Math.max(0, Math.min(255, code)));
   process.exit(signal ? 128 : 1);
 });
