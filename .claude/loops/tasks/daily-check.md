@@ -13,6 +13,13 @@
 
 1. git statusの確認
    - `git status --short` と `git log --oneline -5` を実行し、未コミットの変更や直近の動きを把握する
+   - 未コミットの記録系ファイル(`.claude/loops/receipts/`、`.claude/loops/state/checkpoint.json`、
+     `docs/loop-status.md`、`dream.md`、`QandA.md`)がある場合は一覧化し、報告に含める(QandA.md Q25)
+   - AIはcommitしない。人間に対しては、下記のコミット文面テンプレートを提案するにとどめる
+
+     ```text
+     chore(loop): record loop outputs for YYYY-MM-DD
+     ```
 2. 基本ドキュメントの存在確認
    - README.md、CLAUDE.md、CONTRACT.md が存在するか確認する
    - 欠けていれば停止条件として報告する
@@ -30,6 +37,7 @@
    - 上記の結果を「問題なし / 要注意 / 要対応」に分類して要約する
 8. 提案の作成
    - 改善が必要な点があれば、変更内容と理由を提案としてまとめる
+   - 未コミットの記録系ファイルがある場合、手順1で作成したコミット推奨を提案に含める
    - **変更は行わず、提案だけ行う**
 
 ## 実行後

@@ -9,6 +9,7 @@
   "allowDelete": false,
   "allowDependencyUpdate": false,
   "maxChangedFiles": 0,
+  "_maxChangedFilesNote": "許可範囲外の変更ファイル数の上限。receipts/新規作成、checkpoint.json更新、dream.md追記、loop-status-reportタスク実行時のdocs/loop-status.md生成など、CLAUDE.md/CONTRACT.mdの許可範囲内の変更はカウントしない(QandA.md Q19)",
   "maxRuntimeMinutes": 15,
   "requireHumanApproval": true,
   "receiptRequired": true,

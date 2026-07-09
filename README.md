@@ -76,6 +76,7 @@ AIは起動するたびに同じ契約を読み、同じ基準で自己点検し
 たとえるなら、blog-review は記事を読む係、note-experiment は実験を記事に育てる係です。
 - `.claude/loops/settings.json` — 安全設定。dry-run、push禁止などの初期値です
 - `docs/note-draft.md` — note記事「私は何もしないループエンジニアになりたい」の下書きです
+- `docs/superpowers/specs/` — 拡張機能・実験機能の設計書置き場です。CONTRACT.md/CLAUDE.md/`.claude/loops/tasks/`のような正式契約ではなく、実装前の設計検討を記録する場所です(QandA.md Q18)
 - `scripts/` — 見回りとレシート作成のための安全なスクリプトです
 
 ## 最初は「報告だけ」から始める理由

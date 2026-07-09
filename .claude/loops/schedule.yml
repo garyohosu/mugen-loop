@@ -40,3 +40,10 @@ tasks:
     cron: null   # 定期実行しない。人間が必要なときに起動する
     mode: dry-run
     note: 文章そのものを見る係。記事下書き・README・note-draft.md の本文をレビューする。公開はしない
+
+  - name: loop-status-report
+    file: .claude/loops/tasks/loop-status-report.md
+    when: "週1回、または必要時に手動実行"
+    cron: "0 9 * * 1"   # 参考表記(毎週月曜9:00)。実際の登録は人間が行う
+    mode: dry-run
+    note: 状態レポート(docs/loop-status.md)を生成する係。daily-checkの毎回実行には含めない(QandA.md Q22)

@@ -32,6 +32,9 @@
      Safety Status、Notes の各セクションが揃っているか
    - 秘密情報が紛れ込んでいないか(通常は紛れ込まない設計だが念のため確認する)
 3. 内容に問題があれば、スクリプトの出力ロジックの改善提案をまとめる(このタスクでは実装しない)
+3.5. `git status --short` を確認し、未コミットの記録系ファイル(receipts、checkpoint.json、
+     docs/loop-status.md、dream.md、QandA.md)があれば一覧化し、レシートと報告にコミット推奨として
+     含める。AIはcommitしない(QandA.md Q25)
 4. receipts にレシートを残す(「何をしたか、なぜしたか、何をしなかったか」)
 5. state/checkpoint.json を更新する(lastRun / lastTask のみ。Q10の確定方針に従う)
 

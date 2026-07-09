@@ -45,6 +45,7 @@ AIは、契約を読み、予定に従い、評価基準で自分の成果を確
 - .claude/loops/state/checkpoint.json の更新
 - docs/note-draft.md への追記案の作成と反映(人間がレビューする前提)
 - loop-status-report タスクに限り、docs/loop-status.md の生成・更新(それ以外のファイルへの書き込みは許可しない)
+- 作業完了時の振り返りとして、dream.md への追記(既存内容の削除・大幅編集・過去記録の改変は禁止。QandA.md Q14)
 
 ## 禁止する作業
 
@@ -53,7 +54,7 @@ AIは、契約を読み、予定に従い、評価基準で自分の成果を確
 - 依存関係の追加・更新・削除
 - 本番環境・外部サービスへの反映
 - 秘密情報(APIキー、トークン、パスワード)の表示・記録・送信
-- settings.json / CONTRACT.md / CLAUDE.md / rubrics の変更
+- rubrics の変更(評価基準は人間が決める)
 - 既存レシートの改変
 - 不明点や危険な操作があるままの続行
 
@@ -84,9 +85,16 @@ AIは、契約を読み、予定に従い、評価基準で自分の成果を確
 - git commit / push / Pull Request作成 / merge
 - ファイルの削除・移動・リネーム
 - 依存関係の変更
-- receipts/ と state/ と docs/note-draft.md 以外へのファイル書き込み
+- receipts/、state/、docs/note-draft.md、loop-status-reportタスク実行時のdocs/loop-status.md、
+  作業完了時の振り返り追記としてのdream.md、以外へのファイル書き込み(QandA.md Q13)
 - 外部サービスへのアクセスや通知の送信
-- settings.json / CONTRACT.md / CLAUDE.md / rubrics の変更
+- settings.json / CONTRACT.md / CLAUDE.md の変更。AIが独断で編集することは禁止だが、
+  人間がチャット上で明示的に編集を承認・依頼した場合は、AIが代行編集してよい。その場合、次を必ず守る。
+  1. 人間の明示指示を承認根拠として扱う
+  2. 編集範囲を指示内容に限定する
+  3. 変更内容をレシートに記録する
+  4. state/checkpoint.json と dream.md を更新する
+  5. commit / push / merge は、別途人間の明示承認がある場合のみ実行する
 - スケジューラへのタスク登録
 
 ## receiptsに残すべき内容
