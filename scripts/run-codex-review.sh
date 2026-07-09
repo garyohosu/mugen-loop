@@ -152,23 +152,50 @@ check_double_lock() {
   return 0
 }
 
+# ---- 補助関数: codexRunStarted: true を、CRLF/LF・前後空白に頑健に判定する ----
+# "- codexRunStarted: true" のような行を key/value として解析し、
+# キーが厳密に codexRunStarted、値が厳密に true の場合にのみ真(exit 0)を返す。
+# grepの単純な文字列一致(2026-07-09に誤検出が発生した)には依存しない。
+#   - 行末の \r (CRLF) はキー・値の両方から除去してから比較する
+#   - キー・値の前後の空白は除去してから比較する
+#   - キー側は先頭の "- " 箇条書き記号も除去してから比較する
+#   - ":" を含む地の文(説明文)は、コロン区切りの1フィールド目がちょうど
+#     "codexRunStarted" にならない限りヒットしない
+receipt_marks_codex_started() {
+  local file="$1"
+  awk -F: '
+    {
+      key = $1
+      gsub(/\r/, "", key)
+      gsub(/^[[:space:]]*-?[[:space:]]*/, "", key)
+      gsub(/[[:space:]]+$/, "", key)
+      if (key != "codexRunStarted") next
+
+      value = $2
+      gsub(/\r/, "", value)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      if (value == "true") { found = 1 }
+    }
+    END { exit found ? 0 : 1 }
+  ' "$file"
+}
+
 # ---- 2. 日次上限判定(QandA.md Q17) ----
 # Asia/Tokyoの日付ディレクトリ配下に、このスクリプト自身が作る開始レシート
 # (ファイル名が "*-codex-review.md" で終わるもの。"-codex-review-blocked.md" は
-# 別名なので対象外)に、"- codexRunStarted: true" の行が完全一致で含まれていれば、
-# その日は実行済みとみなす。
+# 別名なので対象外)に、codexRunStarted: true の行が含まれていれば、
+# その日は実行済みとみなす。判定は receipt_marks_codex_started() で行う。
 #
-# 注意: リポジトリ全体やreceipts配下を広くgrepすると、本スクリプトの説明文や
-# 作業レシートの解説文中に "codexRunStarted: true" という文字列が地の文として
-# 出現しただけで誤検出する(実際に2026-07-09の実装レシートで発生した)。
-# そのため、対象ファイルをこのスクリプトが生成するファイル名パターンに限定し、
-# 行の完全一致(grep -x)でのみ判定する。
+# 注意: 対象ファイルをこのスクリプトが生成するファイル名パターンに限定するのに加え、
+# receipt_marks_codex_started() 自体もkey/valueを厳密に解析するため、
+# 本スクリプトの説明文や作業レシートの解説文中に "codexRunStarted: true" という
+# 文字列が地の文として出現しただけでは誤検出しない(2026-07-09に発見した不具合の修正)。
 check_daily_limit() {
   if [ -d "$RECEIPTS_DIR" ]; then
     local f
     for f in "$RECEIPTS_DIR"/*-codex-review.md; do
       [ -e "$f" ] || continue
-      if grep -qx -- "- codexRunStarted: true" "$f" 2>/dev/null; then
+      if receipt_marks_codex_started "$f"; then
         write_blocked_receipt "本日(${TODAY_JST}, Asia/Tokyo)は既にCodexを起動済みです(1日1回まで)。(${f})"
         return 1
       fi
